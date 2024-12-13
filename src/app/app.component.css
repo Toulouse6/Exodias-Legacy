@@ -1,0 +1,40 @@
+#exodia-header {
+    text-align: center;
+    transition: all 0.5s ease-in-out;
+}
+
+.exodia-glow {
+    animation: 
+        exodia-glow 3s alternate, 
+        rotate-glow 3s linear 1;
+    transform-origin: center;
+}
+
+@keyframes exodia-glow {
+    0% {
+        text-shadow: 
+        rgba(212, 175, 55, 0.8), 
+        rgba(212, 175, 55, 0.8), 
+        rgba(212, 175, 55, 1);
+        filter: drop-shadow(rgba(212, 175, 55, 0.8));
+    }
+
+    100% {
+        text-shadow: 
+            rgba(212, 175, 55, 1), 
+            rgba(212, 175, 55, 1), 
+            rgba(212, 175, 55, 1);
+        filter: drop-shadow(rgba(212, 175, 55, 1));
+    }
+}
+
+
+@keyframes rotate-glow {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

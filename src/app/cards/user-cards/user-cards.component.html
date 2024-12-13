@@ -1,0 +1,13 @@
+<app-cards-container title="The Forbidden One Reborn">
+    @if (isFetching() && !error()) {
+    <p class="fallback-text">Claim your victory...</p>
+    }
+    @if (error()) {
+    <p class="fallback-text">{{ error() }}</p>
+    }
+    @if (cards().length) {
+    <app-cards [cards]="cards()!" [isUserCards]="true" (selectCard)="onRemoveCard($event)" />
+    } @else {
+    <p class="fallback-text">No pieces found.</p>
+    }
+</app-cards-container>

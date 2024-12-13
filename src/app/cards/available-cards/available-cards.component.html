@@ -1,0 +1,23 @@
+<app-cards-container title="Forbidden Pieces">
+    <ng-container *ngIf="isFetching() && !error(); else errorOrCards">
+      <p class="fallback-text">Piece by piece, power awaits...</p>
+    </ng-container>
+    <ng-template #errorOrCards>
+      <ng-container *ngIf="error(); else cardsList">
+        <p class="fallback-text">{{ error() }}</p>
+      </ng-container>
+      <ng-template #cardsList>
+        <ng-container *ngIf="cards().length > 0; else noPieces">
+          <app-cards 
+            [cards]="cards()!" 
+            [isUserCards]="false" 
+            (selectCard)="onSelectCard($event)">
+          </app-cards>
+        </ng-container>
+        <ng-template #noPieces>
+          <p class="fallback-text">No pieces found.</p>
+        </ng-template>
+      </ng-template>
+    </ng-template>
+  </app-cards-container>
+  

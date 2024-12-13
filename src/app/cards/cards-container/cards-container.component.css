@@ -1,0 +1,41 @@
+section {
+    justify-content: center;
+    width: 100%;
+    max-width: 70vw;
+    flex-wrap: wrap;
+    display: flex;
+    margin: 1rem auto;
+    padding: 2rem 1rem;
+    border: 1px solid #384652;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+section h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1rem;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+
+/* Mobile */
+
+@media(max-width: 600px) {
+
+    section {
+        font-size: 0.8rem;
+        letter-spacing: 3;
+        max-width: 85vh;
+    }
+
+    section h2 {
+        font-size: 0.8rem;
+    }
+
+}

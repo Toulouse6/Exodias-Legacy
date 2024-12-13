@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,700&family=Playfair+Display:wght@400;700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,700&family=Oswald:wght@400;700&display=swap");
+
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "Oswald", sans-serif;
+    line-height: 1.5;
+    color: white;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgb(15, 15, 15) 30%, rgba(18, 18, 18, 1) 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 2rem;
+    padding: auto;
+    height: 100%;
+}
+
+header {
+    text-align: center;
+}
+
+header img {
+    margin: 3rem auto 1rem auto;
+    width: 14vw;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.8;
+    filter: drop-shadow(0px 0px 8px rgba(255, 255, 255, 0.7));
+}
+
+header h1 {
+    margin: 0;
+    font-size: 3.5vw;
+    font-weight: 500;
+    text-transform: uppercase;
+    line-height: 1.5;
+    letter-spacing: 5px;
+    color: white;
+}
+
+header p {
+    margin: 0.5rem auto 2rem auto;
+    font-size: 2vw;
+    font-weight: 500;
+    letter-spacing: 3px;
+    width: 90%;
+    color: white;
+}
+
+footer {
+    height: 3rem;
+}
+
+@media (max-width: 1024px) {
+
+    header h1 {
+        margin: 0;
+        font-size: 8vw;
+    }
+
+    header p {
+        margin: 0.5rem auto 2rem auto;
+        font-size: 3vw;
+    }
+
+    header img {
+        width: 22vw;
+        margin-top: 2rem;
+    }
+
+
+    @media (max-width: 430px) {
+
+        header img {
+            width: 33vw;
+        }
+    }    
+}

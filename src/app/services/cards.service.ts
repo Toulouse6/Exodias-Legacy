@@ -152,7 +152,7 @@ export class CardsService {
                     this.exodiaSummoned.set(false); // Reset Exodia state
                 }, 7500);
             } else {
-                alert('Exodia refuses this order!');
+                alert('Exodia refuses this order! Try again...');
                 this.resetCards();
             }
         }

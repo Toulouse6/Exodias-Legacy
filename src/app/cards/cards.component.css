@@ -1,5 +1,5 @@
 .user-cards-section ul {
-    max-width: 65vw;
+    max-width: 50vw;
     display: flex;
     flex-wrap: wrap;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
@@ -11,7 +11,6 @@
 }
 
 .available-cards-section ul {
-    max-width: 65vw;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
@@ -20,19 +19,15 @@
     margin: 2rem auto;
     list-style: none;
     justify-content: start;
-    padding-left: 1rem;
     padding-right: 1rem;
 }
 
 .card-item {
     position: relative;
     display: flex;
-    border-radius: 5px;
     background: #282828;
-    border: 1px solid #1f1c2c;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     animation: slide-up-fade-in 0.3s ease-out forwards;
-    max-width: 95%;
     justify-content: center;
     flex: 0 0 auto;
     margin-right: 1rem;
@@ -56,15 +51,12 @@
     border-radius: 5px;
 }
 
-.card-item:last-child {
-    margin-right: 0;
-}
 
 .card-item img {
     width: 100%;
     height: 100%;
-    max-width: 18vw;
-    min-width: 15vw;
+    max-width: 13vw;
+    min-width: 13vw;
     object-fit: cover;
     border-radius: 5px;
     transition: 0.8s ease-in;
@@ -135,6 +127,10 @@
         padding-left: 1rem;
     }
 
+    .user-cards-section ul {
+        max-width: 52vh;
+    }
+
 }
 
 @media (max-width: 767px) {
@@ -143,32 +139,23 @@
         font-size: 0.8rem;
     }
 
-}
-
-@media (max-width: 620px) {
-
-    .available-cards-section ul,
     .user-cards-section ul {
-        grid-gap: 0rem;
+        max-width: 40vh;
     }
 
 }
+
 
 
 @media (max-width: 430px) {
 
-    .available-cards-section ul,
     .user-cards-section ul {
-        grid-gap: 0;
-        padding: 0;
-        margin: 0 auto;
-        font-size: 0.8rem;
-        max-width: 36vh;
+        max-width: 33vh;
     }
 
     .card-item {
         min-width: none;
-        max-width: 20vh;
+        max-width: 22vh;
         margin-right: 0.1;
         margin-bottom: 0.3rem;
         font-size: 0.8rem;

@@ -88,8 +88,8 @@ export class CardsService {
             catchError((error) => {
                 this.userCards.set(prevUserCards);
                 this.availableCards.set(prevAvailableCards);
-                this.errorService.showError('Failed to add card to favorites.');
-                return throwError(() => new Error('Failed to add card to favorites.'));
+                this.errorService.showError('Failed to select card.');
+                return throwError(() => new Error('Failed to select card.'));
             })
         );
     }
@@ -122,8 +122,8 @@ export class CardsService {
                 localStorage.setItem('userCardsData', JSON.stringify(prevUserCards));
                 localStorage.setItem('availableCardsData', JSON.stringify(prevAvailableCards));
     
-                this.errorService.showError('Failed to remove card from favorites.');
-                return throwError(() => new Error('Failed to remove card from favorites.'));
+                this.errorService.showError('Failed to unselect card.');
+                return throwError(() => new Error('Failed to unselect card.'));
             })
         );
     }

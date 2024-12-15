@@ -61,10 +61,10 @@ export class AvailableCardsComponent implements OnInit {
     onSelectCard(selectedCard: Card) {
         const subscription = this.cardsService.addCardToUserCards(selectedCard).subscribe({
             next: () => {
-                console.log('Card added to favorites:', selectedCard.title);
+                console.log('Card was selected:', selectedCard.title);
                 this.checkCardOrder();
             },
-            error: (error) => console.error('Error adding card:', error),
+            error: (error) => console.error('Error selecting card:', error),
         });
 
         this.destroyRef.onDestroy(() => subscription.unsubscribe());
@@ -89,7 +89,9 @@ export class AvailableCardsComponent implements OnInit {
                 document.getElementById('cards-section')?.classList.add('fade-out');
 
                 setTimeout(() => {
-                    this.cardsService.resetCards();
+
+                    // Exodia Summoned
+                    console.log('Exodia Summoned!');
                     this.resetSelection();
                     // Cleanup animations
                     document.body.classList.remove('shake');

@@ -5,10 +5,10 @@ section {
     flex-wrap: wrap;
     display: flex;
     margin: 1rem auto;
-    padding: 2rem 1rem;
-    border: 1px solid #384652;
+    padding: 1rem;
     border-radius: 8px;
     box-sizing: border-box;
+    height: fit-content;
 }
 
 section h2 {

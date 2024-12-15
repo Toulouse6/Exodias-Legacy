@@ -5,7 +5,7 @@ header {
 }
 
 header img {
-    margin: -9rem auto 0 auto;
+    margin: -10rem auto 0 auto;
     width: 40vw;
     object-fit: contain;
     opacity: 0.2;
@@ -15,7 +15,7 @@ header img {
 }
 
 header h1 {
-    margin-top: -24rem;
+    margin-top: -25rem;
     font-size: 4vw;
     font-weight: 500;
     text-transform: uppercase;
@@ -34,7 +34,7 @@ header h3 {
 
 
 
-@media (max-width: 1500px) {
+@media (max-width: 1600px) {
 
 
     header img {
@@ -68,7 +68,7 @@ header img {
 }
 
 header h1 {
-    margin-top: -18rem;
+    margin-top: -20rem;
     font-size: 4vw;
 }
 
@@ -90,7 +90,7 @@ header h3 {
     }
     
     header h1 {
-        margin-top: -20rem;
+        margin-top: -22rem;
         font-size: 4vw;
     }
     
@@ -111,7 +111,7 @@ header h3 {
     }
     
     header h1 {
-        margin-top: -17rem;
+        margin-top: -20rem;
         font-size: 4vw;
     }
     
@@ -131,7 +131,7 @@ header h3 {
     }
     
     header h1 {
-        margin-top: -7em;
+        margin-top: -10em;
         font-size: 5vw;
     }
     
@@ -152,7 +152,7 @@ header h3 {
     }
     
     header h1 {
-        margin-top: -11rem;
+        margin-top: -12rem;
         font-size: 6vw;
     }
     

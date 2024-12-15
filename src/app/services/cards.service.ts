@@ -150,9 +150,9 @@ export class CardsService {
                 setTimeout(() => {
                     this.resetCards();
                     this.exodiaSummoned.set(false); // Reset Exodia state
-                }, 7000);
+                }, 4000);
             } else {
-                alert('Incorrect card order! Resetting...');
+                alert('Exodia refuses this order!');
                 this.resetCards();
             }
         }

@@ -1,18 +1,14 @@
-@if (error()) {
-    <app-error-modal title="An error occurred!" [message]="error()" />
-}
-
 <header>
     <div id="exodia-header">
-        <img src="exo-coin.png" alt="Stylized globe" />
+        <img src="exo-header1.png" alt="Stylized globe" />
     </div>
     <h1>Exodia's Legacy</h1>
-    <p>
+    <h3>
         Bring Together the Assembly of Power and Claim Ultimate Power.
-    </p>
+    </h3>
 </header>
 
 <main>
-    <app-available-cards (exodiaSummoned)="triggerExodiaEffects()"></app-available-cards>
+    <app-available-cards></app-available-cards>
     <app-user-cards></app-user-cards>
 </main>

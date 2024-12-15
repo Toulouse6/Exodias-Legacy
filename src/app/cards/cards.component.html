@@ -1,33 +1,14 @@
-<!-- Available Cards Section -->
-<div *ngIf="!isUserCards" class="available-cards-section">
+<div [ngClass]="isUserCards ? 'user-cards-section card-section' : 'available-cards-section card-section'">
     <ul>
-        @for (card of cards; track card.id) {
-        <li class="card-item available-card-item">
-            <button (click)="onSelectCard(card)">
+        <li *ngFor="let card of cards; trackBy: trackById" class="card-item">
+            <button (click)="isUserCards ? onRemoveCard(card) : onSelectCard(card)">
                 <img 
                     [src]="'http://localhost:3000/' + card.image.src" 
                     [alt]="card.image.alt" 
-                    class="available-card-image" 
+                    [class.available-card-image]="!isUserCards"
+                    [class.user-card-image]="isUserCards"
                 />
             </button>
         </li>
-        }
-    </ul>
-</div>
-
-<!-- User Cards Section -->
-<div *ngIf="isUserCards" class="user-cards-section">
-    <ul>
-        @for (card of cards; track card.id) {
-        <li class="card-item user-card-item">
-            <button (click)="onSelectCard(card)">
-                <img 
-                    [src]="'http://localhost:3000/' + card.image.src" 
-                    [alt]="card.image.alt" 
-                    class="user-card-image" 
-                />
-            </button>
-        </li>
-        }
     </ul>
 </div>

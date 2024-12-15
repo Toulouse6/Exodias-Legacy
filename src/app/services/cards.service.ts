@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { ErrorService } from './error.service';
 import { Card } from '../cards/cards.model';
 
@@ -8,174 +8,245 @@ import { Card } from '../cards/cards.model';
     providedIn: 'root',
 })
 export class CardsService {
+
+    exodiaSummoned = signal(false); 
+    
+    private httpClient = inject(HttpClient);
     private errorService = inject(ErrorService);
+
     private userCards = signal<Card[]>([]);
     private availableCards = signal<Card[]>([]);
-    private httpClient = inject(HttpClient);
 
     loadedUserCards = this.userCards.asReadonly();
     loadedAvailableCards = this.availableCards.asReadonly();
 
+    targetOrder: string[] = [
+        'EX Legendary 1/5',
+        'EX Legendary 2/5',
+        'EX Legendary 3/5',
+        'EX Legendary 4/5',
+        'EX Legendary 5/5',
+    ];
+
     constructor() {
-
-        // Load initial state from local storage
-        const savedAvailableCards = localStorage.getItem('availableCardsData');
-        const savedUserCards = localStorage.getItem('userCardsData');
-
-        if (savedAvailableCards) {
-            this.availableCards.set(JSON.parse(savedAvailableCards));
-        }
-
-        if (savedUserCards) {
-            this.userCards.set(JSON.parse(savedUserCards));
-        }
+        // Load initial state from localStorage
+        this.initializeLocalStorage();
+        this.initializeAppState();
 
         const resetRequired = localStorage.getItem('appResetRequired');
         if (resetRequired === 'true') {
-            this.performAutoReset();
+            this.resetCardsCompletely().subscribe();
             localStorage.removeItem('appResetRequired');
         }
     }
 
-    private performAutoReset() {
-        this.resetCardsCompletely().subscribe({
-            error: (error) => {
-                console.error('Auto reset failed', error);
-            }
-        });
-    }
 
-    loadAvailableCards() {
-        return this.fetchCards('http://localhost:3000/exodia-parts', 'Error fetching available cards.').pipe(
-            tap((cards) => {
+    private initializeAppState() {
+        const resetRequired = localStorage.getItem('appResetRequired');
 
-                const userCardsIds = new Set(this.userCards().map((c) => c.id));
-                const filteredCards = cards.filter((card) => !userCardsIds.has(card.id));
-                this.availableCards.set(filteredCards);
-            })
-        );
-    }
-
-    loadUserCards() {
-        return this.fetchCards('http://localhost:3000/user-cards', 'Error fetching favorite cards.').pipe(
-            tap((userCards) => {
-                this.userCards.set(userCards);
-
-                // Recompute available cards
-                const userCardsIds = new Set(userCards.map((c) => c.id));
-                this.availableCards.set(
-                    this.availableCards().filter((card) => !userCardsIds.has(card.id))
-                );
-            })
-        );
-    }
-
-    addCardToUserCards(card: Card) {
-        const prevUserCards = this.userCards();
-        const prevAvailableCards = this.availableCards();
-
-        if (!prevUserCards.some((c) => c.id === card.id)) {
-            this.userCards.set([...prevUserCards, card]);
-            this.availableCards.set(prevAvailableCards.filter((c) => c.id !== card.id));
+        if (resetRequired === 'true') {
+            // Perform a backend reset
+            this.resetCardsCompletely().subscribe(() => {
+                localStorage.removeItem('appResetRequired');
+            });
+        } else {
+            // Force reset state regardless of localStorage
+            this.resetCardsCompletely().subscribe({
+                next: () => console.log('State reset completely on refresh'),
+                error: (err) => console.error('Failed to reset cards:', err),
+            });
         }
-
-        return this.httpClient.put('http://localhost:3000/user-cards', { cardId: card.id }).pipe(
-            tap(() => {
-                console.log('User Cards Updated:', this.userCards().map((c) => c.title));
-                localStorage.setItem('userCardsData', JSON.stringify(this.userCards()));
-                localStorage.setItem('availableCardsData', JSON.stringify(this.availableCards()));
-            }),
-            catchError((error) => {
-                this.userCards.set(prevUserCards);
-                this.availableCards.set(prevAvailableCards);
-                this.errorService.showError('Failed to select card.');
-                return throwError(() => new Error('Failed to select card.'));
-            })
-        );
     }
 
+    private initializeLocalStorage() {
+        const savedAvailableCards = localStorage.getItem('availableCardsData');
+        const savedUserCards = localStorage.getItem('userCardsData');
 
-
-    removeUserCard(card: Card) {
-        const prevUserCards = this.userCards();
-        const prevAvailableCards = this.availableCards();
-    
-        if (prevUserCards.some((c) => c.id === card.id)) {
-            this.userCards.set(prevUserCards.filter((c) => c.id !== card.id));
-            this.availableCards.set([...prevAvailableCards, card]);
-    
-            // Update local storage
-            localStorage.setItem('userCardsData', JSON.stringify(this.userCards()));
-            localStorage.setItem('availableCardsData', JSON.stringify(this.availableCards()));
-        }
-    
-        return this.httpClient.delete(`http://localhost:3000/user-cards/${card.id}`).pipe(
-            tap(() => {
-                console.log(`Card ${card.title} removed successfully`);
-            }),
-            catchError((error) => {
-                // Revert local state
-                this.userCards.set(prevUserCards);
-                this.availableCards.set(prevAvailableCards);
-    
-                // Revert local storage
-                localStorage.setItem('userCardsData', JSON.stringify(prevUserCards));
-                localStorage.setItem('availableCardsData', JSON.stringify(prevAvailableCards));
-    
-                this.errorService.showError('Failed to unselect card.');
-                return throwError(() => new Error('Failed to unselect card.'));
-            })
-        );
+        if (savedAvailableCards) this.availableCards.set(JSON.parse(savedAvailableCards));
+        if (savedUserCards) this.userCards.set(JSON.parse(savedUserCards));
     }
 
-
-    private fetchCards(url: string, errorMessage: string) {
-        return this.httpClient.get<{ cards: Card[] }>(url).pipe(
-            map((resData) => resData.cards),
-            catchError((error) => {
-                console.error(error);
-                return throwError(() => new Error(errorMessage));
-            })
-        );
-    }
-
-    checkUserCardsOrder(targetOrder: string[]): boolean {
-        const currentOrder = this.userCards().map((card) => card.title);
-        return JSON.stringify(currentOrder) === JSON.stringify(targetOrder);
-    }
-
-
-    // Local session reset
-    resetCards() {
-        const currentUserCards = this.userCards();
-        const currentAvailableCards = this.availableCards();
-
-        // Reset all user cards to available cards
-        this.availableCards.set([...currentAvailableCards, ...currentUserCards]);
-
-        // Clear user cards
-        this.userCards.set([]);
-
-        // Update local storage
+    private updateLocalStorage() {
         localStorage.setItem('userCardsData', JSON.stringify(this.userCards()));
         localStorage.setItem('availableCardsData', JSON.stringify(this.availableCards()));
     }
 
-    // Backend reset
-    resetCardsCompletely() {
-        return this.httpClient.post<{ cards: Card[] }>('http://localhost:3000/reset-cards', {}).pipe(
-            tap((response) => {
-                // Set all cards back to available
-                this.availableCards.set(response.cards);
-                
-                // Clear user cards
-                this.userCards.set([]);
-            }),
-            catchError((error) => {
-                this.errorService.showError('Failed to reset cards.');
-                return throwError(() => new Error('Failed to reset cards.'));
+    loadAvailableCards(): Observable<Card[]> {
+        return this.fetchCards('http://localhost:3000/exodia-parts', 'Error fetching available cards.').pipe(
+            tap((cards) => {
+                const userCardIds = new Set(this.userCards().map((card) => card.id));
+                this.availableCards.set(cards.filter((card) => !userCardIds.has(card.id)));
+                this.updateLocalStorage();
             })
         );
     }
+
+    // Load User Cards
+    loadUserCards() {
+        return this.fetchCards('http://localhost:3000/user-cards', 'Error fetching user cards.').pipe(
+            tap((cards) => {
+                this.userCards.set(cards);
+                this.syncAvailableCards();
+            })
+        );
+    }
+
+    private syncAvailableCards() {
+        const userCardIds = new Set(this.userCards().map((card) => card.id));
+        this.availableCards.set(
+            this.availableCards().filter((card) => !userCardIds.has(card.id))
+        );
+    }
+
+    // Add Card
+    addCardToUserCards(card: Card): Observable<void> {
+        if (this.userCards().some((c) => c.id === card.id)) return of();
+
+        const updatedUserCards = [...this.userCards(), card];
+        this.userCards.set(updatedUserCards);
+        this.availableCards.set(this.availableCards().filter((c) => c.id !== card.id));
+        this.updateLocalStorage();
+
+        this.checkCardOrder();
+
+        return this.httpClient.put<void>('http://localhost:3000/user-cards', { cardId: card.id }).pipe(
+            catchError((error) => this.handleError('Failed to select card.', error))
+        );
+    }
+
+
+    // Remove Card
+    removeUserCard(card: Card): Observable<void> {
+        if (!this.userCards().some((c) => c.id === card.id)) {
+            console.warn('Card not found in user cards.');
+            return of();
+        }
+
+        const updatedUserCards = this.userCards().filter((c) => c.id !== card.id);
+        const updatedAvailableCards = [...this.availableCards(), card];
+
+        this.userCards.set(updatedUserCards);
+        this.availableCards.set(updatedAvailableCards);
+        this.updateLocalStorage();
+
+        return this.httpClient.delete<void>(`http://localhost:3000/user-cards/${card.id}`).pipe(
+            catchError((error) => this.handleError('Failed to unselect card.', error))
+        );
+    }
+
+
+    checkCardOrder() {
+        const currentOrder = this.userCards().map((card) => card.title);
+
+        if (currentOrder.length === this.targetOrder.length) {
+            const isCorrectOrder = currentOrder.every((title, index) => title === this.targetOrder[index]);
+
+            if (isCorrectOrder) {
+                console.log('Exodia Summoned!');
+                this.exodiaSummoned.set(true); // Set Exodia state to true
+                this.applyCardEffects();
+                this.triggerExodiaAnimation();
+
+                setTimeout(() => {
+                    this.resetCards();
+                    this.exodiaSummoned.set(false); // Reset Exodia state
+                }, 7000);
+            } else {
+                alert('Incorrect card order! Resetting...');
+                this.resetCards();
+            }
+        }
+    }
+    
+
+    private applyCardEffects() {
+        // Wait for DOM updates to ensure all user-card images are present
+        setTimeout(() => {
+            const userCards = document.querySelectorAll('.user-card-image');
+    
+            if (userCards.length === 0) {
+                console.warn('No user cards found for animation.');
+                return;
+            }
+    
+            // Add animation class to each card
+            userCards.forEach((card) => {
+                card.classList.add('exodia-effect');
+            });
+    
+            // Remove animation after a timeout
+            setTimeout(() => {
+                userCards.forEach((card) => card.classList.remove('exodia-effect'));
+            }, 3000); // Match animation duration
+        }, 0); // Ensure execution after DOM update
+    }
+    
+
+
+    private triggerExodiaAnimation() {
+        const exodiaHeader = document.getElementById('exodia-header');
+        const exodiaHeaderImg = document.querySelector('#exodia-header img');
+    
+        // Apply header glow animation
+        if (exodiaHeader) {
+            exodiaHeader.classList.add('exodia-glow');
+            setTimeout(() => exodiaHeader.classList.remove('exodia-glow'), 3000);
+        }
+    
+        // Apply image-specific animation
+        if (exodiaHeaderImg) {
+            exodiaHeaderImg.classList.add('exodia-header-effect');
+            setTimeout(() => exodiaHeaderImg.classList.remove('exodia-header-effect'), 5000);
+        }
+    
+        // Trigger card animations
+        this.applyCardEffects();
+    }
+    
+    
+
+    private fetchCards(url: string, errorMessage: string): Observable<Card[]> {
+        return this.httpClient.get<{ cards: Card[] }>(url).pipe(
+            map((res) => res.cards),
+            catchError((error) => this.handleError(errorMessage, error))
+        );
+    }
+
+    private handleError(message: string, error: any): Observable<never> {
+        console.error(message, error);
+        this.errorService.showError(message);
+        return throwError(() => new Error(message));
+    }
+
+    resetCards() {
+        this.userCards.set([]);
+        this.availableCards.set([]);
+        this.loadAvailableCards().subscribe({
+            next: () => {
+                this.updateLocalStorage();
+                console.log('Cards reset successfully');
+            },
+            error: (err) => console.error('Failed to reset cards:', err),
+        });
+    }
+
+
+    resetCardsCompletely(): Observable<void> {
+        return this.httpClient.post<{ cards?: Card[] }>('http://localhost:3000/reset-cards', {}).pipe(
+            tap((response) => {
+                const cards = response.cards || []; 
+                this.availableCards.set(cards);  
+                this.userCards.set([]);            
+                this.updateLocalStorage();
+            }),
+            map(() => undefined), // Ensure the observable emits void
+            catchError((error) => this.handleError('Failed to reset cards.', error))
+        );
+    }
+
+
+
+
+
 
 }

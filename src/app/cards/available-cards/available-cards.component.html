@@ -1,23 +1,24 @@
-<app-cards-container title="The Forbidden Pieces">
-    <ng-container *ngIf="isFetching() && !error(); else errorOrCards">
-      <p class="fallback-text">Piece by piece, power awaits...</p>
+<div class="available-cards-section">
+    <!-- Loading Indicator -->
+    <ng-container *ngIf="isFetching(); else availableCardsContent">
+        <p class="fallback-text">Loading the Forbidden Pieces...</p>
     </ng-container>
-    <ng-template #errorOrCards>
-      <ng-container *ngIf="error(); else cardsList">
-        <p class="fallback-text">{{ error() }}</p>
-      </ng-container>
-      <ng-template #cardsList>
-        <ng-container *ngIf="cards().length > 0; else noPieces">
-          <app-cards 
-            [cards]="cards()!" 
-            [isUserCards]="false" 
-            (selectCard)="onSelectCard($event)">
-          </app-cards>
-        </ng-container>
-        <ng-template #noPieces>
-          <p class="fallback-text">No pieces found.</p>
-        </ng-template>
-      </ng-template>
+
+    <!-- Content -->
+    <ng-template #availableCardsContent>
+        <!-- Error Message -->
+        <p *ngIf="error()" class="error-text">{{ error() }}</p>
+
+        <ul>
+            <li *ngFor="let card of availableCards(); trackBy: trackById" class="card-item available-card-item">
+                <button (click)="onSelectCard(card)">
+                    <img 
+                        [src]="'http://localhost:3000/' + card.image.src" 
+                        [alt]="card.image.alt"
+                        class="available-card-image" 
+                    />
+                </button>
+            </li>
+        </ul>
     </ng-template>
-  </app-cards-container>
-  
+</div>

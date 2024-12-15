@@ -1,60 +1,50 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CardsService } from '../../services/cards.service';
 import { Card } from '../cards.model';
-import { CardsContainerComponent } from '../cards-container/cards-container.component';
-import { CardsComponent } from '../cards.component';
+import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-user-cards',
     standalone: true,
     templateUrl: './user-cards.component.html',
     styleUrls: ['./user-cards.component.css'],
-    imports: [CardsComponent, CardsContainerComponent],
+    imports: [CommonModule],
 })
 export class UserCardsComponent implements OnInit {
-    isFetching = signal(false);
-    error = signal('');
 
-    private cardsService = inject(CardsService);
-    private destroyRef = inject(DestroyRef);
-    cards = this.cardsService.loadedUserCards;
+    isFetching = signal(false);
+    availableCardsFetching = signal(false);
+
+
+    error = signal('');
+    userCards = this.cardsService.loadedUserCards;
+
+    constructor(public cardsService: CardsService) { }
 
     ngOnInit() {
         this.isFetching.set(true);
-
-        const fileContent = localStorage.getItem('userCardsData');
-        if (!fileContent) {
-            this.isFetching.set(false);
-            return;
-        }
-
-        // Reload user cards
-        const subscription = this.cardsService.loadUserCards().subscribe({
-            error: (error: Error) => {
-                this.error.set(error.message);
+        this.cardsService.loadUserCards().subscribe({
+            error: (err: any) => {
+                this.error.set(err.message);
+                console.error('Error loading user cards:', err);
             },
-            complete: () => {
-                this.isFetching.set(false);
-            },
+            complete: () => this.isFetching.set(false),
         });
-
-        this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
-
 
     onRemoveCard(card: Card) {
-        const subscription = this.cardsService.removeUserCard(card).subscribe({
-            next: () => {
-                console.log('Card was unselected.');
-            },
-            error: (error) => {
-                console.error(error);
-                this.error.set('Failed to unselect card');
+        this.cardsService.removeUserCard(card).pipe(
+            tap(() => console.log(`Card "${card.title}" removed successfully.`))
+        ).subscribe({
+            error: (err: any) => {
+                console.error('Error removing card:', err);
+                this.error.set('Failed to remove the card.');
             },
         });
-
-        this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
 
-
+    trackById(index: number, card: Card): string {
+        return card.id;
+    }
 }

@@ -10,7 +10,7 @@ import { ErrorModalComponent } from './modal/error-model/error-modal.component';
     standalone: true,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    imports: [AvailableCardsComponent, UserCardsComponent, ErrorModalComponent],
+    imports: [AvailableCardsComponent, UserCardsComponent],
 })
 export class AppComponent implements OnInit {
     private cardsService = inject(CardsService);
@@ -20,36 +20,28 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.checkAndResetIfNeeded();
-      }
-    
-      private checkAndResetIfNeeded() {
-        const resetRequired = localStorage.getItem('appResetRequired');
-        
-        if (resetRequired === 'true') {
-          this.cardsService.resetCardsCompletely().subscribe({
-            next: () => {
-              localStorage.removeItem('appResetRequired');
-            },
-            error: (error) => {
-              console.error('Auto reset failed', error);
-            }
-          });
-        }
-      }
-    
-    triggerExodiaEffects() {
-        // Add visual effects for summoning Exodia
-        const header = document.getElementById('exodia-header');
-        if (header) {
-            header.classList.add('exodia-glow'); // Apply animation class
-        }
 
-        // Reset after effects
-        setTimeout(() => {
-            if (header) {
-                header.classList.remove('exodia-glow'); // Remove animation
-            }
-            this.cardsService.resetCards(); // Reset cards to initial state
-        }, 3000); 
+        // Reset cards only if no state exists in local storage
+        const savedUserCards = localStorage.getItem('userCardsData');
+        const savedAvailableCards = localStorage.getItem('availableCardsData');
+
+        if (!savedUserCards || !savedAvailableCards) {
+            this.cardsService.resetCards();
+        }
+    }
+
+    private checkAndResetIfNeeded() {
+        const resetRequired = localStorage.getItem('appResetRequired');
+
+        if (resetRequired === 'true') {
+            this.cardsService.resetCardsCompletely().subscribe({
+                next: () => {
+                    localStorage.removeItem('appResetRequired');
+                },
+                error: (error) => {
+                    console.error('Auto reset failed', error);
+                }
+            });
+        }
     }
 }

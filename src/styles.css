@@ -133,7 +133,7 @@ body {
 #exodia-header img.exodia-header-effect {
     animation: exodia-header-glow 5s;
     z-index: 10;
-    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.9));
+    filter: drop-shadow(0 0 15px rgba(186, 151, 12, 0.8));
     /* Golden glow */
     transform-origin: center;
 }
@@ -166,7 +166,7 @@ footer {
 .user-card-image.exodia-effect {
     animation: exodia-golden-glow 1s infinite, exodia-shake 0.5s infinite;
     z-index: 10;
-    border: 2px solid rgba(212, 175, 55, 0.9);
+    border: 2px solid rgba(186, 151, 12, 0.6);
     transform-origin: center;
 }
 
@@ -175,17 +175,16 @@ footer {
 @keyframes exodia-golden-glow {
     0% {
         transform: scale(1);
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        box-shadow: 0 0 10px rgba(186, 151, 12, 0.6);
     }
 
     50% {
         transform: scale(1.2);
-        box-shadow: 0 0 30px rgba(212, 175, 55, 1);
     }
 
     100% {
         transform: scale(1);
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        box-shadow: 0 0 10px rgba(186, 151, 12, 0.6);
     }
 }
 

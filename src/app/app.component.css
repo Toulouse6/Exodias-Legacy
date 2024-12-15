@@ -5,17 +5,17 @@ header {
 }
 
 header img {
-    margin: -5rem auto 0 auto;
-    width: 30vw;
+    margin: -9rem auto 0 auto;
+    width: 40vw;
     object-fit: contain;
-    opacity: 0.3;
-    filter: drop-shadow(0px 0px 8px rgba(255, 255, 255, 0.7));
+    opacity: 0.2;
+    filter: drop-shadow(0px 0px 8px rgb(0, 0, 0));
     position: relative;
     z-index: 1;
 }
 
 header h1 {
-    margin-top: -15rem;
+    margin-top: -24rem;
     font-size: 4vw;
     font-weight: 500;
     text-transform: uppercase;
@@ -32,3 +32,155 @@ header h3 {
     width: 90%;
 }
 
+
+
+@media (max-width: 1500px) {
+
+
+    header img {
+        margin: -10rem auto 0 auto;
+        width: 45vw;
+    }
+    
+    header h1 {
+        margin-top: -22rem;
+        font-size: 4vw;
+    }
+    
+    header h3 {
+        margin: -2rem auto 1rem auto;
+        font-size: 1.5vw;
+    }
+    
+    
+    }
+
+
+
+
+
+@media (max-width: 1440px) {
+
+
+header img {
+    margin: -8rem auto 0 auto;
+    width: 45vw;
+}
+
+header h1 {
+    margin-top: -18rem;
+    font-size: 4vw;
+}
+
+header h3 {
+    margin: -2rem auto 1rem auto;
+    font-size: 1.5vw;
+}
+
+
+}
+
+
+@media (max-width: 1280px) {
+
+
+    header img {
+        margin: -7rem auto 0 auto;
+        width: 50vw;
+    }
+    
+    header h1 {
+        margin-top: -20rem;
+        font-size: 4vw;
+    }
+    
+    header h3 {
+        margin: -2rem auto 1rem auto;
+        font-size: 1.5vw;
+    }
+
+}
+
+
+
+@media (max-width: 1024px) {
+
+    header img {
+        margin: -7rem auto 0 auto;
+        width: 60vw;
+    }
+    
+    header h1 {
+        margin-top: -17rem;
+        font-size: 4vw;
+    }
+    
+    header h3 {
+        margin: -1rem auto 1rem auto;
+        font-size: 1.8vw;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    header img {
+        margin: -3rem auto 0 auto;
+        width: 65vw;
+    }
+    
+    header h1 {
+        margin-top: -7em;
+        font-size: 5vw;
+    }
+    
+    header h3 {
+        margin: -1rem auto 1rem auto;
+        font-size: 2vw;
+    }
+
+}
+
+
+
+@media (max-width: 600px) {
+
+    header img {
+        margin: -5rem auto 0 auto;
+        width: 65vw;
+    }
+    
+    header h1 {
+        margin-top: -11rem;
+        font-size: 6vw;
+    }
+    
+    header h3 {
+        margin: 0rem auto 1rem auto;
+        font-size: 2.5vw;
+        line-height: 1.6;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    header img {
+        margin: -2rem auto 0 auto;
+        width: 50vw;
+    }
+    
+    header h1 {
+        margin-top: -8rem;
+        font-size: 6vw;
+    }
+    
+    header h3 {
+        margin: 0rem auto 1rem auto;
+        font-size: 2.5vw;
+        line-height: 1.6;
+    }
+
+}

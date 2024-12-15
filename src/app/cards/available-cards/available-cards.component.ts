@@ -23,19 +23,18 @@ export class AvailableCardsComponent implements OnInit {
 
     ngOnInit() {
         this.availableCardsFetching.set(true);
-    
+
         const subscription = this.cardsService.loadAvailableCards().subscribe({
-            error: (err) => this.error.set(err.message),
+            error: (err: any) => this.error.set(err.message),
             complete: () => this.availableCardsFetching.set(false),
         });
-    
+
         this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
-    
 
     onSelectCard(card: Card) {
         const subscription = this.cardsService.addCardToUserCards(card)?.subscribe({
-            error: (err) => console.error('Error adding card:', err),
+            error: (err: any) => console.error('Error adding card:', err),
         });
 
         if (subscription) {

@@ -19,6 +19,7 @@ export class UserCardsComponent implements OnInit {
 
     error = signal('');
     userCards = this.cardsService.loadedUserCards;
+    
 
     constructor(public cardsService: CardsService) { }
 

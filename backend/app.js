@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 
 const dataPath = (file) => path.join(__dirname, "data", file);
 
+
 app.use(express.static("images"));
 app.use(bodyParser.json());
 app.use(cors({

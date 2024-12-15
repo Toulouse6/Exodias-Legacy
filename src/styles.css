@@ -47,20 +47,17 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    /* Consistent spacing */
     justify-content: center;
     margin: 1.5rem auto;
     padding: 0;
     list-style: none;
 }
 
-/* Available Cards Section (Horizontal Scrolling) */
+/* Available Cards Section */
 .available-cards-section ul {
     display: flex;
     flex-wrap: nowrap;
-    /* Prevent wrapping */
     overflow-x: auto;
-    /* Enable horizontal scroll */
     white-space: nowrap;
     scroll-behavior: smooth;
     margin-top: 3rem;
@@ -69,7 +66,7 @@ body {
     padding-right: 2rem;
 }
 
-/* Available Cards Section (Horizontal Scrolling) */
+/* Available Cards Section */
 .user-cards-section ul {
     display: flex;
     flex-wrap: wrap;
@@ -81,7 +78,7 @@ body {
     justify-content: center;
 }
 
-/* Card Item Styles */
+/* Card Items */
 .card-item {
     position: relative;
     display: flex;
@@ -115,24 +112,8 @@ body {
     box-shadow: 0 0 8px 4px #3b3e51;
 }
 
-/* Card Title Overlay */
-.card-item h3 {
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    line-height: 1.4;
-    margin: 0;
-    padding: 0.25rem 0.5rem;
-    text-align: center;
-    width: 90%;
-    box-shadow: 0 1px 4px rgba(255, 255, 255, 0.8);
-}
 
-/* Hover Effects for Specific Cards */
+/* Hover Effects Cards */
 .available-card-image {
     filter: grayscale(100%);
     opacity: 0.8;
@@ -181,7 +162,7 @@ footer {
     }
 }
 
-/* Golden Glow & Shake for User Cards */
+/* Golden Glow & Shake for Cards */
 .user-card-image.exodia-effect {
     animation: exodia-golden-glow 1s infinite, exodia-shake 0.5s infinite;
     z-index: 10;
@@ -208,7 +189,7 @@ footer {
     }
 }
 
-/* Enhanced Shake Animation */
+/* Shake Animation */
 @keyframes exodia-shake {
 
     0%,

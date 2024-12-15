@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.checkAndResetIfNeeded();
 
-        // Reset cards only if no state exists in local storage
+        // Reset cards if no state exists
         const savedUserCards = localStorage.getItem('userCardsData');
         const savedAvailableCards = localStorage.getItem('availableCardsData');
 

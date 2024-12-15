@@ -8,11 +8,6 @@ function loggingInterceptor(
     next: HttpHandlerFn
 ) {
 
-    // Manipulate error request:
-    // const req = request.clone({
-    // headers: request.headers.set('X-DEBUG', 'TESTING')
-    // });
-
     console.log('[Outgoing Request]');
     console.log(request);
 
@@ -32,6 +27,6 @@ function loggingInterceptor(
 }
 
 bootstrapApplication(AppComponent, {
-    // Set provider - available for the entire app:
+    // provider available for entire app:
     providers: [provideHttpClient(withInterceptors([loggingInterceptor]))],
 }).catch((err) => console.error(err));

@@ -29,7 +29,7 @@ export class CardsService {
     ];
 
     constructor() {
-        // Load initial state from localStorage
+        // Load initial state
         this.initializeLocalStorage();
         this.initializeAppState();
 
@@ -45,12 +45,12 @@ export class CardsService {
         const resetRequired = localStorage.getItem('appResetRequired');
 
         if (resetRequired === 'true') {
-            // Perform a backend reset
+            // Backend reset
             this.resetCardsCompletely().subscribe(() => {
                 localStorage.removeItem('appResetRequired');
             });
         } else {
-            // Force reset state regardless of localStorage
+            // Force reset state
             this.resetCardsCompletely().subscribe({
                 next: () => console.log('State reset completely on refresh'),
                 error: (err) => console.error('Failed to reset cards:', err),
@@ -143,7 +143,7 @@ export class CardsService {
 
             if (isCorrectOrder) {
                 console.log('Exodia Summoned!');
-                this.exodiaSummoned.set(true); // Set Exodia state to true
+                this.exodiaSummoned.set(true); // Set Exodia state
                 this.applyCardEffects();
                 this.triggerExodiaAnimation();
 
@@ -160,7 +160,7 @@ export class CardsService {
     
 
     private applyCardEffects() {
-        // Wait for DOM updates to ensure all user-card images are present
+        // Wait for DOM updates
         setTimeout(() => {
             const userCards = document.querySelectorAll('.user-card-image');
     
@@ -169,16 +169,16 @@ export class CardsService {
                 return;
             }
     
-            // Add animation class to each card
+            // Add animation class
             userCards.forEach((card) => {
                 card.classList.add('exodia-effect');
             });
     
-            // Remove animation after a timeout
+            // Remove animation after timeout
             setTimeout(() => {
                 userCards.forEach((card) => card.classList.remove('exodia-effect'));
             }, 3000); // Match animation duration
-        }, 0); // Ensure execution after DOM update
+        }, 0); // Execute after DOM update
     }
     
 
@@ -187,13 +187,13 @@ export class CardsService {
         const exodiaHeader = document.getElementById('exodia-header');
         const exodiaHeaderImg = document.querySelector('#exodia-header img');
     
-        // Apply header glow animation
+        // Apply header glow
         if (exodiaHeader) {
             exodiaHeader.classList.add('exodia-glow');
             setTimeout(() => exodiaHeader.classList.remove('exodia-glow'), 3000);
         }
     
-        // Apply image-specific animation
+        // Apply cards animation
         if (exodiaHeaderImg) {
             exodiaHeaderImg.classList.add('exodia-header-effect');
             setTimeout(() => exodiaHeaderImg.classList.remove('exodia-header-effect'), 5000);
@@ -239,7 +239,7 @@ export class CardsService {
                 this.userCards.set([]);            
                 this.updateLocalStorage();
             }),
-            map(() => undefined), // Ensure the observable emits void
+            map(() => undefined),
             catchError((error) => this.handleError('Failed to reset cards.', error))
         );
     }

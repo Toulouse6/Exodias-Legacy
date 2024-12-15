@@ -10,10 +10,10 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule]
 })
 export class CardsComponent {
-    @Input() cards: Card[] = []; // Cards list
-    @Input() isUserCards: boolean = false; // Flag to differentiate card type
-    @Output() selectCard = new EventEmitter<Card>(); // Event for selecting cards
-    @Output() unselectCard = new EventEmitter<Card>(); // Event for unselecting cards
+    @Input() cards: Card[] = [];  
+    @Input() isUserCards: boolean = false;  
+    @Output() selectCard = new EventEmitter<Card>(); 
+    @Output() unselectCard = new EventEmitter<Card>();  
 
     trackById(index: number, card: Card): string {
         return card.id;

@@ -9,8 +9,8 @@ import { Card } from '../cards/cards.model';
 })
 export class CardsService {
 
-    exodiaSummoned = signal(false); 
-    
+    exodiaSummoned = signal(false);
+
     private httpClient = inject(HttpClient);
     private errorService = inject(ErrorService);
 
@@ -150,60 +150,58 @@ export class CardsService {
                 setTimeout(() => {
                     this.resetCards();
                     this.exodiaSummoned.set(false); // Reset Exodia state
-                }, 4000);
+                }, 7500);
             } else {
                 alert('Exodia refuses this order!');
                 this.resetCards();
             }
         }
     }
-    
+
 
     private applyCardEffects() {
-        // Wait for DOM updates
         setTimeout(() => {
             const userCards = document.querySelectorAll('.user-card-image');
-    
             if (userCards.length === 0) {
                 console.warn('No user cards found for animation.');
                 return;
             }
-    
-            // Add animation class
-            userCards.forEach((card) => {
-                card.classList.add('exodia-effect');
+
+            userCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('exodia-effect');
+                }, index * 800); // delay for each card
             });
-    
-            // Remove animation after timeout
+
+            // Remove animation timeout
             setTimeout(() => {
                 userCards.forEach((card) => card.classList.remove('exodia-effect'));
-            }, 3000); // Match animation duration
-        }, 0); // Execute after DOM update
+            }, 6000);
+        }, 0);
     }
-    
 
 
     private triggerExodiaAnimation() {
         const exodiaHeader = document.getElementById('exodia-header');
         const exodiaHeaderImg = document.querySelector('#exodia-header img');
-    
+
         // Apply header glow
         if (exodiaHeader) {
             exodiaHeader.classList.add('exodia-glow');
             setTimeout(() => exodiaHeader.classList.remove('exodia-glow'), 3000);
         }
-    
+
         // Apply cards animation
         if (exodiaHeaderImg) {
             exodiaHeaderImg.classList.add('exodia-header-effect');
-            setTimeout(() => exodiaHeaderImg.classList.remove('exodia-header-effect'), 5000);
+            setTimeout(() => exodiaHeaderImg.classList.remove('exodia-header-effect'), 4000);
         }
-    
+
         // Trigger card animations
         this.applyCardEffects();
     }
-    
-    
+
+
 
     private fetchCards(url: string, errorMessage: string): Observable<Card[]> {
         return this.httpClient.get<{ cards: Card[] }>(url).pipe(
@@ -211,6 +209,7 @@ export class CardsService {
             catchError((error) => this.handleError(errorMessage, error))
         );
     }
+
 
     private handleError(message: string, error: any): Observable<never> {
         console.error(message, error);
@@ -230,23 +229,18 @@ export class CardsService {
         });
     }
 
-
     resetCardsCompletely(): Observable<void> {
         return this.httpClient.post<{ cards?: Card[] }>('http://localhost:3000/reset-cards', {}).pipe(
             tap((response) => {
-                const cards = response.cards || []; 
-                this.availableCards.set(cards);  
-                this.userCards.set([]);            
+                const cards = response.cards || [];
+                this.availableCards.set(cards);
+                this.userCards.set([]);
                 this.updateLocalStorage();
             }),
             map(() => undefined),
             catchError((error) => this.handleError('Failed to reset cards.', error))
         );
     }
-
-
-
-
 
 
 }

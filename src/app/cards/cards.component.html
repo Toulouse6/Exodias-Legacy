@@ -1,12 +1,11 @@
 <div [ngClass]="isUserCards ? 'user-cards-section card-section' : 'available-cards-section card-section'">
     <ul>
-        <li *ngFor="let card of cards; trackBy: trackById" class="card-item">
-            <button (click)="isUserCards ? onRemoveCard(card) : onSelectCard(card)">
+        <li *ngFor="let card of cards; let i = index; trackBy: trackById" class="card-item" [ngStyle]="{'--index': i}">
+            <button (click)="isUserCards ? onRemoveCard(card) : onSelectCard(card)" [attr.aria-label]="isUserCards ? 'Remove card' : 'Select card'">
                 <img 
                     [src]="'http://localhost:3000/' + card.image.src" 
                     [alt]="card.image.alt" 
-                    [class.available-card-image]="!isUserCards"
-                    [class.user-card-image]="isUserCards"
+                    [ngClass]="{'available-card-image': !isUserCards, 'user-card-image': isUserCards}"
                 />
             </button>
         </li>

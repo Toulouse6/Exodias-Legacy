@@ -1,20 +1,19 @@
 {
     "database": {
-      "rules": "database.rules.json"
+        "rules": "database.rules.json"
     },
     "hosting": {
-      "public": "dist/http",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
+        "public": "dist/http/browser",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
     }
-  }
-  
+}

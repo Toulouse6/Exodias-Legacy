@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { ErrorService } from './error.service';
 import { Card } from '../cards/cards.model';
+import { environment } from '../../environments/environments';
 
 @Injectable({
     providedIn: 'root',
@@ -72,7 +73,7 @@ export class CardsService {
     }
 
     loadAvailableCards(): Observable<Card[]> {
-        return this.fetchCards('http://localhost:3000/exodia-parts', 'Error fetching available cards.').pipe(
+        return this.fetchCards(`${environment.apiUrl}/exodia-parts`, 'Error fetching available cards.').pipe(
             tap((cards) => {
                 const userCardIds = new Set(this.userCards().map((card) => card.id));
                 this.availableCards.set(cards.filter((card) => !userCardIds.has(card.id)));
@@ -83,7 +84,7 @@ export class CardsService {
 
     // Load User Cards
     loadUserCards() {
-        return this.fetchCards('http://localhost:3000/user-cards', 'Error fetching user cards.').pipe(
+        return this.fetchCards(`${environment.apiUrl}/user-cards`, 'Error fetching user cards.').pipe(
             tap((cards) => {
                 this.userCards.set(cards);
                 this.syncAvailableCards();
@@ -109,7 +110,7 @@ export class CardsService {
 
         this.checkCardOrder();
 
-        return this.httpClient.put<void>('http://localhost:3000/user-cards', { cardId: card.id }).pipe(
+        return this.httpClient.put<void>(`${environment.apiUrl}/user-cards`, { cardId: card.id }).pipe(
             catchError((error) => this.handleError('Failed to select card.', error))
         );
     }
@@ -129,7 +130,7 @@ export class CardsService {
         this.availableCards.set(updatedAvailableCards);
         this.updateLocalStorage();
 
-        return this.httpClient.delete<void>(`http://localhost:3000/user-cards/${card.id}`).pipe(
+        return this.httpClient.delete<void>(`${environment.apiUrl}/user-cards/${card.id}`).pipe(
             catchError((error) => this.handleError('Failed to unselect card.', error))
         );
     }
@@ -204,6 +205,7 @@ export class CardsService {
 
 
     private fetchCards(url: string, errorMessage: string): Observable<Card[]> {
+        console.log(`Fetching cards from: ${url}`); 
         return this.httpClient.get<{ cards: Card[] }>(url).pipe(
             map((res) => res.cards),
             catchError((error) => this.handleError(errorMessage, error))
@@ -230,8 +232,10 @@ export class CardsService {
     }
 
     resetCardsCompletely(): Observable<void> {
-        return this.httpClient.post<{ cards?: Card[] }>('http://localhost:3000/reset-cards', {}).pipe(
+        console.log(`Resetting cards at: ${environment.apiUrl}/reset-cards`); // Debugging line
+        return this.httpClient.post<{ cards?: Card[] }>(`${environment.apiUrl}/reset-cards`, {}).pipe(
             tap((response) => {
+                console.log('Response from reset-cards:', response); // Debugging line
                 const cards = response.cards || [];
                 this.availableCards.set(cards);
                 this.userCards.set([]);

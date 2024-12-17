@@ -56,7 +56,6 @@
                             "optimization": true,
                             "sourceMap": false,
                             "extractLicenses": true,
-                            "vendorChunk": false,
                             "buildOptimizer": true
                         },
                         "development": {

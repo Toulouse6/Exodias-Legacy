@@ -1,4 +1,4 @@
-* Exodia's Legacy
+*Exodia's Legacy*
 
 **Align the forbidden pieces of Exodia to unleash its ultimate power.**
 

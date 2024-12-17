@@ -12,5 +12,4 @@ Exodia, the Forbidden One, is a legendary monster made of five pieces. Collectin
 
 **Live Demo: https://exodia-legacy.web.app/**
 
-![Exodia Screenshot](assets/app-screenshot.png)
-
+![Exodia Screenshot](app-screenshot.png)

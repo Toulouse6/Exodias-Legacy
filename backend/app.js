@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import 'dotenv/config'; // Load environment variables
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -11,21 +12,21 @@ const port = process.env.PORT || 3000;
 
 const dataPath = (file) => path.join(__dirname, "data", file);
 
-
-app.use(express.static("images"));
+// Middleware
+app.use(express.static(path.join(__dirname, "images")));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: "*",
+    origin: process.env.CORS_ORIGIN || "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
 }));
 
 // Backend Routes: 
 
-// GET
+// GET /exodia-parts
 app.get("/exodia-parts", async (req, res) => {
     try {
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate delay
         const fileContent = await fs.readFile(dataPath("exodia-parts.json"));
         const cardsData = JSON.parse(fileContent);
         res.status(200).json({ cards: cardsData });
@@ -35,6 +36,7 @@ app.get("/exodia-parts", async (req, res) => {
     }
 });
 
+// GET /user-cards
 app.get("/user-cards", async (req, res) => {
     try {
         const fileContent = await fs.readFile(dataPath("user-cards.json"));
@@ -46,7 +48,7 @@ app.get("/user-cards", async (req, res) => {
     }
 });
 
-// PUT
+// PUT /user-cards
 app.put("/user-cards", async (req, res) => {
     try {
         const cardId = req.body.cardId;
@@ -71,7 +73,7 @@ app.put("/user-cards", async (req, res) => {
     }
 });
 
-// DELETE
+// DELETE /user-cards/:id
 app.delete("/user-cards/:id", async (req, res) => {
     try {
         const cardId = req.params.id;
@@ -94,7 +96,7 @@ app.delete("/user-cards/:id", async (req, res) => {
     }
 });
 
-// POST (Reset Cards)
+// POST /reset-cards
 app.post("/reset-cards", async (req, res) => {
     try {
         const fileContent = await fs.readFile(dataPath("exodia-parts.json"));
@@ -108,11 +110,12 @@ app.post("/reset-cards", async (req, res) => {
     }
 });
 
-// 404
-app.use((req, res, next) => {
+// 404 Fallback
+app.use((req, res) => {
     res.status(404).json({ message: "404 - Not Found" });
 });
 
+// Server Listener
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
